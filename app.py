@@ -1,8 +1,10 @@
+import os
 import joblib 
 import pandas as pd
 import streamlit as st
 
-model= joblib.load("Used_Car_Price_Pipeline.pkl")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "Used_Car_Price_Pipeline.pkl")
+model = joblib.load(MODEL_PATH)
 
 st.title("Used Car Price Prediction")
 
@@ -35,22 +37,23 @@ age= st.number_input("What is the age of your car? (Just Year)")
 
 #Converting user inputs into data frame:
 car= pd.DataFrame({
-    'milage': [milage],
+    'milage': [float(milage)],
     'fuel_type': [fule_type],
     'transmission': [transmission],
     'accident': [accident],
     'clean_title': [{'Yes': True, 'No': False}[clean_title]],
-    'horse_power': [horse_power],
-    'engine_capacity': [engine_capacity],
-    'cylinder_number': [cylinder_number],
-    'age': [age]
+    'horse_power': [int(horse_power)],
+    'engine_capacity': [float(engine_capacity)],
+    'cylinder_number': [int(cylinder_number)],
+    'age': [int(age)]
 })
 
 
 #For Price Prediction
 if (st.button('Predict')):
-    if not milage or not fule_type or not transmission or not accident or not clean_title or not horse_power or not engine_capacity or not cylinder_number or not age:
-        st.error(f"Opps! The Feature(s) can't be let empty.")
+    if any(v is None for v in [milage, fule_type, transmission, accident,horse_power, engine_capacity, cylinder_number, age]):
+        st.error("Please fill in all fields before prediction.")
+        st.stop()
     else:
         prediction= model.predict(car)[0]
         st.success(f"Estimated Price of the Car: ${prediction:,.2f}")
