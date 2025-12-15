@@ -2,7 +2,7 @@ import joblib
 import pandas as pd
 import streamlit as st
 
-model= joblib.load("E:/University (UTA)/First Sem/DATA 3401/Honors Contract/Used_Car_Price_Pipeline.pkl")
+model= joblib.load("Used_Car_Price_Pipeline.pkl")
 
 st.title("Used Car Price Prediction")
 
